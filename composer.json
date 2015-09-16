@@ -1,0 +1,43 @@
+{
+    "name": "fivelab/api",
+    "description": "Api system",
+    "keywords": [ "api", "json-rpc" ],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Vitaliy Zhuk",
+            "email": "v.zhuk@fivelab.org"
+        },
+
+        {
+            "name": "FiveLab Team",
+            "email": "dev@fivelab.org",
+            "homepage": "http://fivelab.org"
+        }
+    ],
+
+    "require": {
+        "php": ">=5.4",
+        "fivelab/cache": "~1.0",
+        "fivelab/exception": "~1.0",
+        "fivelab/reflection": "~1.0",
+        "fivelab/error": "~1.0",
+        "symfony/event-dispatcher": "~2.3"
+    },
+
+    "suggest": {
+        "symfony/validator": "For validate request objects",
+        "fivelab/object-mapper": "For map input data to request object",
+        "fivelab/model-normalizer": "For use transformable response",
+        "fivelab/model-transformer": "For use transformable response"
+    },
+
+    "require-dev": {
+        "phpunit/phpunit": "4.*"
+    },
+
+    "autoload": {
+        "psr-4": { "FiveLab\\Component\\Api\\": "src/" }
+    }
+}
