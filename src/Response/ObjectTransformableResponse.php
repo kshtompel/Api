@@ -78,6 +78,8 @@ class ObjectTransformableResponse
         }
 
         $this->action = self::ACTION_TRANSFORM | self::ACTION_NORMALIZE;
+        $this->normalizerContext = $normalizerContext;
+        $this->transformerContext = $transformerContext;
         $this->object = $object;
     }
 
