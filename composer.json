@@ -23,7 +23,7 @@
         "fivelab/exception": "~1.0",
         "fivelab/reflection": "~1.0",
         "fivelab/error": "~1.0",
-        "symfony/event-dispatcher": "~2.3"
+        "symfony/event-dispatcher": "~2.3|~3.0"
     },
 
     "suggest": {
