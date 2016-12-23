@@ -21,7 +21,10 @@ use FiveLab\Component\ObjectMapper\ObjectMapperInterface;
 use FiveLab\Component\Reflection\Reflection;
 use FiveLab\Component\VarTagValidator\VarTagValidatorInterface;
 use phpDocumentor\Reflection\DocBlock;
+use phpDocumentor\Reflection\DocBlock\Tags\Var_;
+use phpDocumentor\Reflection\DocBlockFactory;
 use Psr\Log\LoggerInterface;
+use ReflectionParameter;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -141,6 +144,7 @@ class ObjectMapperParameterResolverAndExtractor implements ParameterResolverInte
 
         $inputParameters = $callable->getReflection()->getParameters();
 
+        /** @var ReflectionParameter $parameter */
         foreach ($inputParameters as $parameter) {
             if ($class = $parameter->getClass()) {
                 if ($class->implementsInterface('FiveLab\Component\Api\Request\RequestInterface')) {
@@ -173,14 +177,21 @@ class ObjectMapperParameterResolverAndExtractor implements ParameterResolverInte
                 );
             }
 
-            $docBlock = new DocBlock($property->reflection);
+            $reflection = $callable->getReflection();
 
-            $content = $docBlock->getShortDescription();
+            $docblock = $reflection->getDocComment();
+            $docBlockFactory = DocBlockFactory::createInstance();
+
+            /** @var DocBlock $docBlock */
+            $docBlock = $docBlockFactory->create($docblock);
+
+            $description = $docBlock->getSummary();
+//            $description = $docBlock->getDescription()->render();
             $typeTags = $docBlock->getTagsByName('var');
             $type = null;
 
             if ($typeTags) {
-                /** @var \phpDocumentor\Reflection\DocBlock\Tag\VarTag $typeTag */
+                /** @var Var_ $typeTag */
                 $typeTag = array_pop($typeTags);
                 $type = $typeTag->getType();
 
@@ -200,7 +211,7 @@ class ObjectMapperParameterResolverAndExtractor implements ParameterResolverInte
                 $property->getFieldName(),
                 $type,
                 $this->isPropertyRequired($property->reflection),
-                $content,
+                $description,
                 $defaultValue
             );
 
@@ -281,7 +292,7 @@ class ObjectMapperParameterResolverAndExtractor implements ParameterResolverInte
      *
      * @return bool
      */
-    private function isPropertyRequired(\ReflectionProperty $property)
+    protected function isPropertyRequired(\ReflectionProperty $property)
     {
         if (!$this->validator) {
             // Can not check...

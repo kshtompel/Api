@@ -16,6 +16,7 @@ use FiveLab\Component\Api\Handler\Parameter\ParameterExtractorInterface;
 use FiveLab\Component\Api\SMD\Action\ActionInterface;
 use FiveLab\Component\Api\SMD\CallableResolver\CallableResolverInterface;
 use phpDocumentor\Reflection\DocBlock;
+use phpDocumentor\Reflection\DocBlockFactory;
 
 /**
  * Base action doc Extractor
@@ -62,9 +63,13 @@ class ActionExtractor implements ActionExtractorInterface
         }
 
         $reflection = $callable->getReflection();
-        $docBlock = new DocBlock($reflection);
+        $docBlockFactory = DocBlockFactory::createInstance();
 
-        $description = $docBlock->getShortDescription();
+        /** @var DocBlock $docBlock */
+        $docBlock = $docBlockFactory->create($reflection->getDocComment());
+
+        $description = $docBlock->getSummary();
+//        $description = $docBlock->getDescription()->render();
         $actionDoc = new Action($action->getName(), $description, $parameters);
 
         return $actionDoc;
